@@ -1,3 +1,5 @@
+import 'package:fitsense/views/settings/settings.dart';
+import 'package:fitsense/widgets/big_icon_button.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -12,19 +14,57 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Patronus"),
+        title: const Text("Patronus"),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Settings())),
+              icon: const Icon(Icons.settings)
+          ),
+        ],
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text("Profil"),
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(30, 40, 30, 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(
+                      Icons.emergency_outlined,
+                      size: 70,
+                    ),
+                    Text(
+                        "Hilfe rufen",
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.contact_page),
-              title: Text("Notfallkontakte"),
+            Padding(
+              padding: const EdgeInsets.only(top: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  BigIconButton(
+                    iconData: Icons.account_circle,
+                    text: "Mein Profil",
+                    onPressed: () {},
+                  ),
+                  BigIconButton(
+                    iconData: Icons.contact_page,
+                    text: "Notfallkontakte",
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             )
           ],
         ),
