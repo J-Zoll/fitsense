@@ -1,6 +1,7 @@
 import 'package:fitsense/models/blood_group.dart';
 import 'package:fitsense/views/profile/list_selector.dart';
 import 'package:fitsense/widgets/text_list_form_field.dart';
+import 'package:fitsense/widgets/text_select_form_field.dart';
 import "package:flutter/material.dart";
 
 import '../../models/user.dart';
@@ -98,39 +99,16 @@ class _UserFormState extends State<UserForm> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: TextFormField(
-              readOnly: true,
-              controller: _bgController,
-              onTap: () => showDialog<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Blutgruppe"),
-                    content: Column(
-                      children: BloodGroup.values
-                          .map((bg) => ListTile(
-                                title: Text(bg.name),
-                                onTap: () => setState(() {
-                                  _bloodGroup = bg;
-                                  _bgController.text = bg.name;
-                                  _handleChanged();
-                                  Navigator.of(context).pop();
-                                }),
-                              ))
-                          .toList(),
-                    ),
-                  );
-                },
-              ),
-              decoration: const InputDecoration(
-                labelText: "Blutgruppe",
-                border: OutlineInputBorder(),
-              ),
-            ),
+            child: TextSelectFormField(
+              labelText: "Blutgruppe",
+              fetchInitValue: () => User.load().then((User user) => user.bloodGroup.name),
+              options: BloodGroup.values.map((bg) => bg.name).toList(),
+              onChanged: (String bgName) => setState(() => _bloodGroup = BloodGroup.fromName(bgName)),
+            )
           ),
           TextListFormField(
-            fetchInitValue: () => User.load().then((User user) => user.allergies),
             labelText: "Allergien",
+            fetchInitValue: () => User.load().then((User user) => user.allergies),
             onChanged: (List<String> allergies) => setState(() {
               _allergies = allergies;
               _handleChanged();
