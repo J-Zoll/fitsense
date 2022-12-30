@@ -86,7 +86,10 @@ class _UserFormState extends State<UserForm> {
               labelText: "Blutgruppe",
               fetchInitValue: () => User.load().then((User user) => user.bloodGroup.name),
               options: BloodGroup.values.map((bg) => bg.name).toList(),
-              onChanged: (String bgName) => setState(() => _bloodGroup = BloodGroup.fromName(bgName)),
+              onChanged: (String bgName) => setState(() {
+                _bloodGroup = BloodGroup.fromName(bgName);
+                _handleChanged();
+              }),
             )
           ),
           TextListFormField(
