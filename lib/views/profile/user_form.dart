@@ -1,5 +1,6 @@
 import 'package:fitsense/models/blood_group.dart';
 import 'package:fitsense/views/profile/list_selector.dart';
+import 'package:fitsense/widgets/better_text_form_field.dart';
 import 'package:fitsense/widgets/text_list_form_field.dart';
 import 'package:fitsense/widgets/text_select_form_field.dart';
 import "package:flutter/material.dart";
@@ -59,43 +60,25 @@ class _UserFormState extends State<UserForm> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: TextFormField(
-              controller: _fnController,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Dieses Feld darf nicht leer sein";
-                }
-                return null;
-              },
+            child: BetterTextFormField(
+              labelText: "Vorname",
+              fetchInitValue: () => User.load().then((User user) => user.firstName),
               onChanged: (String firstName) => setState(() {
-                _firstName = firstName.isEmpty ? null : firstName;
+                _firstName = firstName;
                 _handleChanged();
               }),
-              decoration: const InputDecoration(
-                labelText: "Vorname",
-                border: OutlineInputBorder(),
-              ),
-            ),
+            )
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: TextFormField(
-              controller: _lnController,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Dieses Feld darf nicht leer sein";
-                }
-                return null;
-              },
+            child: BetterTextFormField(
+              labelText: "Nachname",
+              fetchInitValue: () => User.load().then((User user) => user.lastName),
               onChanged: (String lastName) => setState(() {
-                _lastName = lastName.isEmpty ? null : lastName;
+                _lastName = lastName;
                 _handleChanged();
               }),
-              decoration: const InputDecoration(
-                labelText: "Nachname",
-                border: OutlineInputBorder(),
-              ),
-            ),
+            )
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
