@@ -37,25 +37,20 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         ],
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: UserForm(
-              onChanged: (User? user) => setState(() {
-                  _user = user;
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: UserForm(
+          onChanged: (User? user) => setState(() {
+              _user = user;
 
-                  if (_user != null) {
-                    _onSubmit = _submit;
-                  } else {
-                    _onSubmit = null;
-                  }
-              })
-              ),
-            ),
-          Text(_user?.toJson() ?? "null"),
-        ],
-      ),
+              if (_user != null) {
+                _onSubmit = _submit;
+              } else {
+                _onSubmit = null;
+              }
+          })
+          ),
+        ),
     );
   }
 }

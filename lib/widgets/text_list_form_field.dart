@@ -48,7 +48,7 @@ class _TextListFormFieldState extends State<TextListFormField> {
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ListSelector(
-              title: "Allergien",
+              title: widget.labelText,
               initValue: _textList,
               onFinished: (textList) {
                 setState(() {

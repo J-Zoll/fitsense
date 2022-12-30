@@ -8,55 +8,50 @@ class User {
   String lastName;
   BloodGroup bloodGroup;
   List<String> allergies;
+  List<String> diseases;
+  List<String> drugs;
 
-  User(
-      this.firstName,
-      this.lastName,
-      this.bloodGroup,
-      this.allergies,
-    );
+  User(this.firstName, this.lastName, this.bloodGroup, this.allergies,
+      this.diseases, this.drugs);
 
   String toJson() {
-    return json.encode(
-      {
-        "firstName": firstName,
-        "lastName": lastName,
-        "bloodGroup": bloodGroup.name,
-        "allergies": allergies,
-      }
-    );
+    return json.encode({
+      "firstName": firstName,
+      "lastName": lastName,
+      "bloodGroup": bloodGroup.name,
+      "allergies": allergies,
+      "diseases": diseases,
+      "drugs": drugs,
+    });
   }
 
   static fromJson(String userJson) {
     var user = json.decode(userJson);
+
     String firstName = user["firstName"];
     String lastName = user["lastName"];
     BloodGroup bloodGroup = BloodGroup.fromName(user["bloodGroup"])!;
-    List<String> allergies = (user["allergies"] as List).map((e) => e as String).toList();
+    List<String> allergies =
+        (user["allergies"] as List).map((e) => e as String).toList();
+    List<String> diseases =
+        (user["diseases"] as List).map((e) => e as String).toList();
+    List<String> drugs =
+        (user["drugs"] as List).map((e) => e as String).toList();
 
-    return User(firstName, lastName, bloodGroup, allergies);
+    return User(firstName, lastName, bloodGroup, allergies, diseases, drugs);
   }
 
   Future<void> save() async {
-    try {
-      Directory dir = await getApplicationDocumentsDirectory();
-      File userFile = File('${dir.path}/user.json');
-      String userJson = toJson();
-      await userFile.writeAsString(userJson);
-    } on Exception catch (e) {
-      print(e);
-    }
+    Directory dir = await getApplicationDocumentsDirectory();
+    File userFile = File('${dir.path}/user.json');
+    String userJson = toJson();
+    await userFile.writeAsString(userJson);
   }
 
   static Future<User> load() async {
-    try {
-      Directory dir = await getApplicationDocumentsDirectory();
-      File userFile = File('${dir.path}/user.json');
-      String userJson = await userFile.readAsString(encoding: utf8);
-      return User.fromJson(userJson);
-    } on Exception catch (e) {
-      print(e);
-      throw(e);
-    }
+    Directory dir = await getApplicationDocumentsDirectory();
+    File userFile = File('${dir.path}/user.json');
+    String userJson = await userFile.readAsString(encoding: utf8);
+    return User.fromJson(userJson);
   }
 }
