@@ -1,5 +1,4 @@
 import 'package:fitsense/models/blood_group.dart';
-import 'package:fitsense/views/profile/list_selector.dart';
 import 'package:fitsense/widgets/better_text_form_field.dart';
 import 'package:fitsense/widgets/text_list_form_field.dart';
 import 'package:fitsense/widgets/text_select_form_field.dart';
@@ -23,11 +22,6 @@ class _UserFormState extends State<UserForm> {
   BloodGroup? _bloodGroup;
   List<String>? _allergies = [];
 
-  final _fnController = TextEditingController();
-  final _lnController = TextEditingController();
-  final _bgController = TextEditingController();
-  final _alController = TextEditingController();
-
   void _handleChanged() {
     if (widget.onChanged != null) {
       User? user;
@@ -36,6 +30,13 @@ class _UserFormState extends State<UserForm> {
       }
       widget.onChanged!(user);
     }
+  }
+
+  String? _nonEmptyValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Dieses Feld darf nicht leer sein";
+    }
+    return null;
   }
 
   @override
@@ -62,6 +63,7 @@ class _UserFormState extends State<UserForm> {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: BetterTextFormField(
               labelText: "Vorname",
+              validator: _nonEmptyValidator,
               fetchInitValue: () => User.load().then((User user) => user.firstName),
               onChanged: (String firstName) => setState(() {
                 _firstName = firstName;
@@ -73,6 +75,7 @@ class _UserFormState extends State<UserForm> {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: BetterTextFormField(
               labelText: "Nachname",
+              validator: _nonEmptyValidator,
               fetchInitValue: () => User.load().then((User user) => user.lastName),
               onChanged: (String lastName) => setState(() {
                 _lastName = lastName;
@@ -92,13 +95,16 @@ class _UserFormState extends State<UserForm> {
               }),
             )
           ),
-          TextListFormField(
-            labelText: "Allergien",
-            fetchInitValue: () => User.load().then((User user) => user.allergies),
-            onChanged: (List<String> allergies) => setState(() {
-              _allergies = allergies;
-              _handleChanged();
-            }),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: TextListFormField(
+              labelText: "Allergien",
+              fetchInitValue: () => User.load().then((User user) => user.allergies),
+              onChanged: (List<String> allergies) => setState(() {
+                _allergies = allergies;
+                _handleChanged();
+              }),
+            ),
           )
         ],
       ),

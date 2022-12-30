@@ -6,13 +6,15 @@ class BetterTextFormField extends StatefulWidget {
       this.labelText,
       this.initValue,
       this.fetchInitValue,
-      this.onChanged})
+      this.onChanged,
+      this.validator})
       : super(key: key);
 
   final String? labelText;
   final String? initValue;
   final Function(String)? onChanged;
   final Future<String> Function()? fetchInitValue;
+  final String? Function(String?)? validator;
 
   @override
   State<BetterTextFormField> createState() => _BetterTextFormFieldState();
@@ -42,6 +44,7 @@ class _BetterTextFormFieldState extends State<BetterTextFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: _controller,
+      validator: widget.validator,
       onChanged: (String text) => _handleChange(text),
       decoration: InputDecoration(
         labelText: widget.labelText,
