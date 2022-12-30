@@ -1,5 +1,6 @@
 import 'package:fitsense/models/blood_group.dart';
 import 'package:fitsense/views/profile/list_selector.dart';
+import 'package:fitsense/widgets/text_list_form_field.dart';
 import "package:flutter/material.dart";
 
 import '../../models/user.dart';
@@ -44,12 +45,6 @@ class _UserFormState extends State<UserForm> {
           _lastName = user.lastName;
           _bloodGroup = user.bloodGroup;
           _allergies = user.allergies;
-
-          _fnController.text = user.firstName;
-          _lnController.text = user.lastName;
-          _bgController.text = user.bloodGroup.name;
-          _alController.text = user.allergies
-              .fold("", (prefix, element) => prefix + "- ${element}\n").trim();
 
           _handleChanged();
         }));
@@ -133,27 +128,14 @@ class _UserFormState extends State<UserForm> {
               ),
             ),
           ),
-          TextFormField(
-            controller: _alController,
-            maxLines: null,
-            readOnly: true,
-            decoration: const InputDecoration(
-                labelText: "Allergien", border: OutlineInputBorder()),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ListSelector(
-                    title: "Allergien",
-                    initValue: _allergies,
-                    onFinished: (allergies) {
-                      setState(() {
-                        _allergies = allergies;
-                        _alController.text = _allergies!.fold(
-                            "", (prefix, element) => prefix + "- ${element}\n").trim();
-                      });
-                    }),
-              ),
-            ),
-          ),
+          TextListFormField(
+            fetchInitValue: () => User.load().then((User user) => user.allergies),
+            labelText: "Allergien",
+            onChanged: (List<String> allergies) => setState(() {
+              _allergies = allergies;
+              _handleChanged();
+            }),
+          )
         ],
       ),
     );
