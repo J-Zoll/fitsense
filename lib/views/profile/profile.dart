@@ -11,6 +11,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  User? _user;
+
+  @override
+  void initState() {
+    User.load().then((User user) => setState(() => _user = user));
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +40,7 @@ class _ProfileState extends State<Profile> {
           )
         ],
       ),
-      body: FutureBuilder(
-        future: User.load(),
-        builder: (context, snapshot) {
-          User user = snapshot.data!;
-          return Text(user.toJson());
-        },
-      ),
+      body: Text(_user?.toJson() ?? "null"),
     );
   }
 }

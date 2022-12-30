@@ -7,11 +7,13 @@ class User {
   String firstName;
   String lastName;
   BloodGroup bloodGroup;
+  List<String> allergies;
 
   User(
       this.firstName,
       this.lastName,
       this.bloodGroup,
+      this.allergies,
     );
 
   String toJson() {
@@ -20,6 +22,7 @@ class User {
         "firstName": firstName,
         "lastName": lastName,
         "bloodGroup": bloodGroup.name,
+        "allergies": allergies,
       }
     );
   }
@@ -29,21 +32,31 @@ class User {
     String firstName = user["firstName"];
     String lastName = user["lastName"];
     BloodGroup bloodGroup = BloodGroup.fromName(user["bloodGroup"])!;
+    List<String> allergies = (user["allergies"] as List).map((e) => e as String).toList();
 
-    return User(firstName, lastName, bloodGroup);
+    return User(firstName, lastName, bloodGroup, allergies);
   }
 
   Future<void> save() async {
-    Directory dir = await getApplicationDocumentsDirectory();
-    File userFile = File('${dir.path}/user.json');
-    String userJson = toJson();
-    await userFile.writeAsString(userJson);
+    try {
+      Directory dir = await getApplicationDocumentsDirectory();
+      File userFile = File('${dir.path}/user.json');
+      String userJson = toJson();
+      await userFile.writeAsString(userJson);
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   static Future<User> load() async {
-    Directory dir = await getApplicationDocumentsDirectory();
-    File userFile = File('${dir.path}/user.json');
-    String userJson = await userFile.readAsString(encoding: utf8);
-    return User.fromJson(userJson);
+    try {
+      Directory dir = await getApplicationDocumentsDirectory();
+      File userFile = File('${dir.path}/user.json');
+      String userJson = await userFile.readAsString(encoding: utf8);
+      return User.fromJson(userJson);
+    } on Exception catch (e) {
+      print(e);
+      throw(e);
+    }
   }
 }
