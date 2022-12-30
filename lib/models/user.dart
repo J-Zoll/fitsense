@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
+import 'blood_group.dart';
 
 class User {
   String firstName;
   String lastName;
+  BloodGroup bloodGroup;
 
   User(
       this.firstName,
       this.lastName,
+      this.bloodGroup,
     );
 
   String toJson() {
@@ -17,6 +19,7 @@ class User {
       {
         "firstName": firstName,
         "lastName": lastName,
+        "bloodGroup": bloodGroup.name,
       }
     );
   }
@@ -25,8 +28,9 @@ class User {
     var user = json.decode(userJson);
     String firstName = user["firstName"];
     String lastName = user["lastName"];
+    BloodGroup bloodGroup = BloodGroup.fromName(user["bloodGroup"])!;
 
-    return User(firstName, lastName);
+    return User(firstName, lastName, bloodGroup);
   }
 
   Future<void> save() async {

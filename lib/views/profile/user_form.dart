@@ -1,3 +1,4 @@
+import 'package:fitsense/models/blood_group.dart';
 import "package:flutter/material.dart";
 
 import '../../models/user.dart';
@@ -14,15 +15,37 @@ class _UserFormState extends State<UserForm> {
   final _formKey = GlobalKey<FormState>();
   String? _firstName;
   String? _lastName;
+  BloodGroup? _bloodGroup;
+
+  final _fnController = TextEditingController();
+  final _lnController = TextEditingController();
+  final _bgController = TextEditingController();
 
   void _handleChanged() {
     if(widget.onChanged != null) {
       User? user;
       if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-        user = User(_firstName!, _lastName!);
+        user = User(_firstName!, _lastName!, _bloodGroup!);
       }
       widget.onChanged!(user);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    User.load().then((User user) => setState(() {
+      _firstName = user.firstName;
+      _lastName = user.lastName;
+      _bloodGroup = user.bloodGroup;
+
+      _fnController.text = user.firstName;
+      _lnController.text = user.lastName;
+      _bgController.text = user.bloodGroup.name;
+
+      _handleChanged();
+    }));
   }
 
   @override
@@ -34,6 +57,7 @@ class _UserFormState extends State<UserForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: TextFormField(
+              controller: _fnController,
               validator: (String? value) {
                 if(value == null || value.isEmpty) {
                   return "Dieses Feld darf nicht leer sein";
@@ -53,6 +77,7 @@ class _UserFormState extends State<UserForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: TextFormField(
+              controller: _lnController,
               validator: (String? value) {
                 if(value == null || value.isEmpty) {
                   return "Dieses Feld darf nicht leer sein";
@@ -69,6 +94,35 @@ class _UserFormState extends State<UserForm> {
               ),
             ),
           ),
+          TextFormField(
+            readOnly: true,
+            controller: _bgController,
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Blutgruppe"),
+                  content: Column(
+                    children: BloodGroup.values.map(
+                            (bg) => ListTile(
+                              title: Text(bg.name),
+                              onTap: () => setState(() {
+                                _bloodGroup = bg;
+                                _bgController.text = bg.name;
+                                _handleChanged();
+                                Navigator.of(context).pop();
+                              }),
+                            )
+                    ).toList(),
+                  ),
+                );
+              },
+            ),
+            decoration: const InputDecoration(
+              labelText: "Blutgruppe",
+              border: OutlineInputBorder(),
+            ),
+          )
         ],
       ),
     );
