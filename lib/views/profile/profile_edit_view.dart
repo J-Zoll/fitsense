@@ -1,3 +1,4 @@
+import 'package:fitsense/views/profile/user_form.dart';
 import 'package:flutter/material.dart';
 import '../../models/user.dart';
 
@@ -9,9 +10,13 @@ class ProfileEditView extends StatefulWidget {
 }
 
 class _ProfileEditViewState extends State<ProfileEditView> {
+  User? _user;
+  void Function()? _onSubmit;
 
-  final _formKey = GlobalKey<FormState>();
-  final _user = User("", "");
+  void _submit() {
+    _user?.save();
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,71 +30,30 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: () {
-              _formKey.currentState?.save();
-              _user.save();
-              Navigator.of(context).pop();
-            },
+            onPressed: _onSubmit,
           )
         ],
         centerTitle: true,
       ),
-      body: FutureBuilder(
-          future: User.load(),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done) {
-              User initialUser = snapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: TextFormField(
-                          initialValue: initialUser.firstName,
-                          validator: (String? value) {
-                            if(value == null || value.isEmpty) {
-                              return "Dieses Feld darf nicht leer sein";
-                            }
-                            return null;
-                          },
-                          onSaved: (String? firstName) => setState(() => _user.firstName = firstName!),
-                          decoration: const InputDecoration(
-                            labelText: "Vorname",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: TextFormField(
-                          initialValue: initialUser.lastName,
-                          validator: (String? value) {
-                            if(value == null || value.isEmpty) {
-                              return "Dieses Feld darf nicht leer sein";
-                            }
-                            return null;
-                          },
-                          onSaved: (String? lastName) => setState(() => _user.lastName = lastName!),
-                          decoration: const InputDecoration(
-                            labelText: "Vorname",
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }
-      )
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: UserForm(
+              onChanged: (User? user) => setState(() {
+                  _user = user;
+
+                  if (_user != null) {
+                    _onSubmit = _submit;
+                  } else {
+                    _onSubmit = null;
+                  }
+              })
+              ),
+            ),
+          Text(_user?.toJson() ?? "null"),
+        ],
+      ),
     );
   }
 }
