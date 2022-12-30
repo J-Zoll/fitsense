@@ -1,5 +1,7 @@
+import 'package:fitsense/views/contacts/contacts.dart';
 import 'package:fitsense/views/settings/settings.dart';
 import 'package:fitsense/widgets/big_icon_button.dart';
+import 'package:fitsense/views/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -21,6 +23,7 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.settings)
           ),
         ],
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -56,12 +59,20 @@ class _HomeState extends State<Home> {
                   BigIconButton(
                     iconData: Icons.account_circle,
                     text: "Mein Profil",
-                    onPressed: () {},
+                    onPressed: () => Navigator
+                        .of(context)
+                        .push(MaterialPageRoute(
+                          builder: (context) => const Profile())
+                        ),
                   ),
                   BigIconButton(
                     iconData: Icons.contact_page,
                     text: "Notfallkontakte",
-                    onPressed: () {},
+                    onPressed: () => Navigator
+                        .of(context)
+                        .push(MaterialPageRoute(
+                          builder: (context) => const Contacts())
+                        ),
                   ),
                 ],
               ),

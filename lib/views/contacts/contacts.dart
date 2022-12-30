@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Settings extends StatelessWidget {
-  const Settings({Key? key}) : super(key: key);
+class Contacts extends StatelessWidget {
+  const Contacts({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Notfallkontakte"),
         leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back)
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Einstellungen"),
         centerTitle: true,
       ),
     );
