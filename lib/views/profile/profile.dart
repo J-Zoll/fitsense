@@ -13,9 +13,13 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   User? _user;
 
+  void _loadProfile() {
+    User.load().then((User user) => setState(() => _user = user));
+  }
+
   @override
   void initState() {
-    User.load().then((User user) => setState(() => _user = user));
+    _loadProfile();
 
     super.initState();
   }
@@ -34,7 +38,7 @@ class _ProfileState extends State<Profile> {
           IconButton(
               onPressed: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => ProfileEditView()))
-                .then((value) => setState(() {})),
+                .then((value) => _loadProfile()),
 
               icon: Icon(Icons.edit)
           )
