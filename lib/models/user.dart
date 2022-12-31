@@ -6,18 +6,20 @@ import 'blood_group.dart';
 class User {
   String firstName;
   String lastName;
+  DateTime birthday;
   BloodGroup bloodGroup;
   List<String> allergies;
   List<String> diseases;
   List<String> drugs;
 
-  User(this.firstName, this.lastName, this.bloodGroup, this.allergies,
-      this.diseases, this.drugs);
+  User(this.firstName, this.lastName, this.birthday, this.bloodGroup,
+      this.allergies, this.diseases, this.drugs);
 
   String toJson() {
     return json.encode({
       "firstName": firstName,
       "lastName": lastName,
+      "birthday": birthday.millisecondsSinceEpoch,
       "bloodGroup": bloodGroup.name,
       "allergies": allergies,
       "diseases": diseases,
@@ -30,6 +32,7 @@ class User {
 
     String firstName = user["firstName"];
     String lastName = user["lastName"];
+    DateTime birthday = DateTime.fromMillisecondsSinceEpoch(user["birthday"]);
     BloodGroup bloodGroup = BloodGroup.fromName(user["bloodGroup"])!;
     List<String> allergies =
         (user["allergies"] as List).map((e) => e as String).toList();
@@ -38,7 +41,8 @@ class User {
     List<String> drugs =
         (user["drugs"] as List).map((e) => e as String).toList();
 
-    return User(firstName, lastName, bloodGroup, allergies, diseases, drugs);
+    return User(
+        firstName, lastName, birthday, bloodGroup, allergies, diseases, drugs);
   }
 
   Future<void> save() async {

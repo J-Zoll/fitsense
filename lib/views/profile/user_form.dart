@@ -1,5 +1,6 @@
 import 'package:fitsense/models/blood_group.dart';
 import 'package:fitsense/widgets/better_text_form_field.dart';
+import 'package:fitsense/widgets/date_form_field.dart';
 import 'package:fitsense/widgets/text_list_form_field.dart';
 import 'package:fitsense/widgets/text_select_form_field.dart';
 import "package:flutter/material.dart";
@@ -19,6 +20,7 @@ class _UserFormState extends State<UserForm> {
   final _formKey = GlobalKey<FormState>();
   String? _firstName;
   String? _lastName;
+  DateTime? _birthday;
   BloodGroup? _bloodGroup;
   List<String>? _allergies = [];
   List<String>? _diseases = [];
@@ -28,8 +30,8 @@ class _UserFormState extends State<UserForm> {
     if (widget.onChanged != null) {
       User? user;
       if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-        user = User(_firstName!, _lastName!, _bloodGroup!, _allergies!,
-            _diseases!, _drugs!);
+        user = User(_firstName!, _lastName!, _birthday!, _bloodGroup!,
+            _allergies!, _diseases!, _drugs!);
       }
       widget.onChanged!(user);
     }
@@ -49,6 +51,7 @@ class _UserFormState extends State<UserForm> {
     User.load().then((User user) => setState(() {
           _firstName = user.firstName;
           _lastName = user.lastName;
+          _birthday = user.birthday;
           _bloodGroup = user.bloodGroup;
           _allergies = user.allergies;
           _diseases = user.diseases;
@@ -89,6 +92,18 @@ class _UserFormState extends State<UserForm> {
                 }),
               )),
           Padding(
+            padding: EdgeInsets.only(bottom: 16),
+            child: DateFormField(
+              labelText: "Geburtstag",
+              onChanged: (DateTime birthday) => setState(() {
+                _birthday = birthday;
+                _handleChanged();
+              }),
+              fetchInitValue: () =>
+                  User.load().then((User user) => user.birthday),
+            ),
+          ),
+          Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: TextSelectFormField(
                 labelText: "Blutgruppe",
@@ -126,8 +141,7 @@ class _UserFormState extends State<UserForm> {
           ),
           TextListFormField(
             labelText: "Medikamente",
-            fetchInitValue: () =>
-                User.load().then((User user) => user.drugs),
+            fetchInitValue: () => User.load().then((User user) => user.drugs),
             onChanged: (List<String> drugs) => setState(() {
               _drugs = drugs;
               _handleChanged();

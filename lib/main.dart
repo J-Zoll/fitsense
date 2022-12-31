@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/home/home.dart';
 
 
@@ -17,6 +18,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: const Home(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale("de"),
+      ],
     );
   }
 }
