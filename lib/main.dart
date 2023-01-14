@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/home/home.dart';
+import 'services/fall_detection_service.dart';
 
 
 void main() {
@@ -18,11 +19,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: const Home(),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate
       ],
-      supportedLocales: [
-        const Locale("de"),
+      supportedLocales: const [
+        Locale("de"),
       ],
     );
   }
