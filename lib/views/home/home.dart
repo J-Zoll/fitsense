@@ -1,7 +1,6 @@
 import 'package:fitsense/services/alarm_service.dart';
 import 'package:fitsense/views/contacts/contacts.dart';
 import 'package:fitsense/views/home/ESenseConnection.dart';
-import 'package:fitsense/views/settings/settings.dart';
 import 'package:fitsense/widgets/big_icon_button.dart';
 import 'package:fitsense/views/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +18,6 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Patronus"),
-        actions: [
-          IconButton(
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Settings())),
-              icon: const Icon(Icons.settings)
-          ),
-        ],
         centerTitle: true,
       ),
       body: Padding(
