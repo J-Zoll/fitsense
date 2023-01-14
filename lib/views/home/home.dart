@@ -1,6 +1,5 @@
 import 'package:fitsense/services/alarm_service.dart';
 import 'package:fitsense/views/contacts/contacts.dart';
-import 'package:fitsense/views/fall_detection/fall_detection_view.dart';
 import 'package:fitsense/views/home/ESenseConnection.dart';
 import 'package:fitsense/views/settings/settings.dart';
 import 'package:fitsense/widgets/big_icon_button.dart';
@@ -79,12 +78,6 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
-            ),
-            ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => FallDetectionView())
-                ),
-                child: Text("Fallerkennung"),
             ),
             Expanded(child: Container()),
             ESenseConnection(),

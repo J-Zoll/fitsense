@@ -1,3 +1,5 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:fitsense/services/fall_detection_service.dart';
 import 'package:flutter/material.dart';
 import 'package:esense_flutter/esense.dart';
 
@@ -10,7 +12,6 @@ class ESenseConnection extends StatefulWidget {
 
 class _ESenseConnectionState extends State<ESenseConnection> {
   final String _eSenseName = "myEarables";
-  bool _isConnected = false;
 
   @override
   void initState() {
@@ -24,6 +25,17 @@ class _ESenseConnectionState extends State<ESenseConnection> {
     print("hasSuccessfulConneted: $hasSuccessfulConneted");
   }
 
+  void _beep() async {
+    await AudioPlayer().play(AssetSource("beep-06.wav"), volume: 1);
+  }
+
+  void _setupFallDetection() {
+    ESenseFallDetection fallDetection = ESenseFallDetection([
+      () => _beep()
+    ]);
+    print("Fall detection is running..");
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ConnectionEvent>(
@@ -32,29 +44,30 @@ class _ESenseConnectionState extends State<ESenseConnection> {
         if (snapshot.hasData) {
           switch (snapshot.data!.type) {
             case ConnectionType.connected:
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 56.0),
+              _setupFallDetection();
+              return const Padding(
+                padding: EdgeInsets.only(bottom: 56.0),
                 child: Center(child: Text("eSense verbunden")),
               );
             case ConnectionType.unknown:
               return ReconnectButton(
-                child: const Text("Verbinung: Unbekannt"),
                 onPressed: _connectToESense,
+                child: const Text("Verbinung: Unbekannt"),
               );
             case ConnectionType.disconnected:
               return ReconnectButton(
-                child: const Text("Verbinung: Getrennt"),
                 onPressed: _connectToESense,
+                child: const Text("Verbinung: Getrennt"),
               );
             case ConnectionType.device_found:
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 56.0),
+              return const Padding(
+                padding: EdgeInsets.only(bottom: 56.0),
                 child: Center(child: Text("Verbinung: Gerät gefunden")),
               );
             case ConnectionType.device_not_found:
               return ReconnectButton(
-                child: Text("Verbinung: Gerät nicht gefunden - $_eSenseName"),
                 onPressed: _connectToESense,
+                child: Text("Verbinung: Gerät nicht gefunden - $_eSenseName"),
               );
           }
         } else {
