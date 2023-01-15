@@ -13,7 +13,7 @@
         </intent>
     </queries>
    <application
-        android:label="fitsense"
+        android:label="Patronus"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
