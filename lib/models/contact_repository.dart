@@ -10,10 +10,14 @@ class ContactRepository {
   static Future<List<Contact>> load() async {
     String path = await getApplicationDocumentsDirectory().then((dir) => dir.path);
     File file = File('$path/$fileName');
-    String contactListJson = await file.readAsString(encoding: utf8);
-    Iterable list = jsonDecode(contactListJson);
-    List<Contact> contactList = List<Contact>.from(list.map((e) => Contact.fromJson(e)));
-    return contactList;
+    if (await file.exists()) {
+      String contactListJson = await file.readAsString(encoding: utf8);
+      Iterable list = jsonDecode(contactListJson);
+      List<Contact> contactList = List<Contact>.from(
+          list.map((e) => Contact.fromJson(e)));
+      return contactList;
+    }
+    return [];
   }
 
   /// Saves a List of Contacts as json file in the applications document

@@ -13,7 +13,7 @@ class BetterTextFormField extends StatefulWidget {
   final String? labelText;
   final String? initValue;
   final Function(String)? onChanged;
-  final Future<String> Function()? fetchInitValue;
+  final Future<String?> Function()? fetchInitValue;
   final String? Function(String?)? validator;
 
   @override
@@ -23,8 +23,8 @@ class BetterTextFormField extends StatefulWidget {
 class _BetterTextFormFieldState extends State<BetterTextFormField> {
   final TextEditingController _controller = TextEditingController();
 
-  void _handleChange(String newText) {
-    if (widget.onChanged != null) {
+  void _handleChange(String? newText) {
+    if (widget.onChanged != null && newText != null) {
       _controller.text = newText;
       _controller.selection = TextSelection.collapsed(offset: newText.length);
       widget.onChanged!(newText);
@@ -34,7 +34,7 @@ class _BetterTextFormFieldState extends State<BetterTextFormField> {
   @override
   void initState() {
     if (widget.fetchInitValue != null) {
-      widget.fetchInitValue!().then((String text) => _handleChange(text));
+      widget.fetchInitValue!().then((String? text) => _handleChange(text));
     }
 
     super.initState();

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:fitsense/services/alarm_service.dart';
 import 'package:fitsense/views/contacts/contacts.dart';
 import 'package:fitsense/views/home/ESenseConnection.dart';
 import 'package:fitsense/widgets/big_icon_button.dart';
 import 'package:fitsense/views/profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,6 +16,27 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  _askForPermissions() async {
+    while (!await Permission.sms.isGranted) {
+      await Permission.sms.request();
+    }
+    sleep(Duration(seconds: 1));
+    while (!await Permission.location.isGranted) {
+      await Permission.location.request();
+    }
+    sleep(Duration(seconds: 1));
+    while (!await Permission.bluetooth.isGranted) {
+      await Permission.bluetooth.request();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _askForPermissions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

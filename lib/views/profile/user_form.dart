@@ -22,16 +22,16 @@ class _UserFormState extends State<UserForm> {
   String? _lastName;
   DateTime? _birthday;
   BloodGroup? _bloodGroup;
-  List<String>? _allergies = [];
-  List<String>? _diseases = [];
-  List<String>? _drugs = [];
+  List<String> _allergies = [];
+  List<String> _diseases = [];
+  List<String> _drugs = [];
 
   void _handleChanged() {
     if (widget.onChanged != null) {
       User? user;
       if (_formKey.currentState != null && _formKey.currentState!.validate()) {
         user = User(_firstName!, _lastName!, _birthday!, _bloodGroup!,
-            _allergies!, _diseases!, _drugs!);
+            _allergies, _diseases, _drugs);
       }
       widget.onChanged!(user);
     }
@@ -48,16 +48,17 @@ class _UserFormState extends State<UserForm> {
   void initState() {
     super.initState();
 
-    User.load().then((User user) => setState(() {
-          _firstName = user.firstName;
-          _lastName = user.lastName;
-          _birthday = user.birthday;
-          _bloodGroup = user.bloodGroup;
-          _allergies = user.allergies;
-          _diseases = user.diseases;
-          _drugs = user.drugs;
-
-          _handleChanged();
+    User.load().then((User? user) => setState(() {
+          if (user != null) {
+            _firstName = user.firstName;
+            _lastName = user.lastName;
+            _birthday = user.birthday;
+            _bloodGroup = user.bloodGroup;
+            _allergies = user.allergies;
+            _diseases = user.diseases;
+            _drugs = user.drugs;
+            _handleChanged();
+          }
         }));
   }
 
@@ -73,7 +74,7 @@ class _UserFormState extends State<UserForm> {
                 labelText: "Vorname",
                 validator: _nonEmptyValidator,
                 fetchInitValue: () =>
-                    User.load().then((User user) => user.firstName),
+                    User.load().then((User? user) => user?.firstName),
                 onChanged: (String firstName) => setState(() {
                   _firstName = firstName;
                   _handleChanged();
@@ -85,7 +86,7 @@ class _UserFormState extends State<UserForm> {
                 labelText: "Nachname",
                 validator: _nonEmptyValidator,
                 fetchInitValue: () =>
-                    User.load().then((User user) => user.lastName),
+                    User.load().then((User? user) => user?.lastName),
                 onChanged: (String lastName) => setState(() {
                   _lastName = lastName;
                   _handleChanged();
@@ -100,7 +101,7 @@ class _UserFormState extends State<UserForm> {
                 _handleChanged();
               }),
               fetchInitValue: () =>
-                  User.load().then((User user) => user.birthday),
+                  User.load().then((User? user) => user?.birthday),
             ),
           ),
           Padding(
@@ -108,7 +109,7 @@ class _UserFormState extends State<UserForm> {
               child: TextSelectFormField(
                 labelText: "Blutgruppe",
                 fetchInitValue: () =>
-                    User.load().then((User user) => user.bloodGroup.name),
+                    User.load().then((User? user) => user?.bloodGroup.name),
                 options: BloodGroup.values.map((bg) => bg.name).toList(),
                 onChanged: (String bgName) => setState(() {
                   _bloodGroup = BloodGroup.fromName(bgName);
@@ -120,7 +121,7 @@ class _UserFormState extends State<UserForm> {
             child: TextListFormField(
               labelText: "Allergien",
               fetchInitValue: () =>
-                  User.load().then((User user) => user.allergies),
+                  User.load().then((User? user) => user?.allergies),
               onChanged: (List<String> allergies) => setState(() {
                 _allergies = allergies;
                 _handleChanged();
@@ -132,7 +133,7 @@ class _UserFormState extends State<UserForm> {
             child: TextListFormField(
               labelText: "Krankheiten",
               fetchInitValue: () =>
-                  User.load().then((User user) => user.diseases),
+                  User.load().then((User? user) => user?.diseases),
               onChanged: (List<String> diseases) => setState(() {
                 _diseases = diseases;
                 _handleChanged();
@@ -141,7 +142,7 @@ class _UserFormState extends State<UserForm> {
           ),
           TextListFormField(
             labelText: "Medikamente",
-            fetchInitValue: () => User.load().then((User user) => user.drugs),
+            fetchInitValue: () => User.load().then((User? user) => user?.drugs),
             onChanged: (List<String> drugs) => setState(() {
               _drugs = drugs;
               _handleChanged();

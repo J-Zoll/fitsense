@@ -12,7 +12,7 @@ class TextSelectFormField extends StatefulWidget {
   final List<String> options;
   final String? labelText;
   final Function(String)? onChanged;
-  final Future<String> Function()? fetchInitValue;
+  final Future<String?> Function()? fetchInitValue;
 
   @override
   State<TextSelectFormField> createState() => _TextSelectFormFieldState();
@@ -27,9 +27,11 @@ class _TextSelectFormFieldState extends State<TextSelectFormField> {
     _text = "";
     if (widget.fetchInitValue != null) {
       widget.fetchInitValue!()
-          .then((String initValue) => setState(() {
-            _text = initValue;
-            _controller.text = initValue;
+          .then((String? initValue) => setState(() {
+            if (initValue != null) {
+              _text = initValue;
+              _controller.text = initValue;
+            }
           }));
     }
 

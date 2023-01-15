@@ -24,6 +24,7 @@ class ESenseFallDetection {
 
   void _handleFall(bool isFall) {
     if (isFall) {
+      print("Fall Detection: Fall detected!");
       for (final func in listeners) {
         func();
       }

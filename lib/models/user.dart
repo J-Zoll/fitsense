@@ -52,10 +52,13 @@ class User {
     await userFile.writeAsString(userJson);
   }
 
-  static Future<User> load() async {
+  static Future<User?> load() async {
     Directory dir = await getApplicationDocumentsDirectory();
     File userFile = File('${dir.path}/user.json');
-    String userJson = await userFile.readAsString(encoding: utf8);
-    return User.fromJson(userJson);
+    if (await userFile.exists()) {
+      String userJson = await userFile.readAsString(encoding: utf8);
+      return User.fromJson(userJson);
+    }
+    return null;
   }
 }

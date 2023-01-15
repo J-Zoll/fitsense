@@ -38,7 +38,7 @@ class _ProfileState extends State<Profile> {
   static const _dataPadding = EdgeInsets.only(bottom: 16);
 
   void _loadProfile() {
-    User.load().then((User user) => setState(() => _user = user));
+    User.load().then((User? user) => setState(() => _user = user));
   }
 
   Widget _showProfile() {

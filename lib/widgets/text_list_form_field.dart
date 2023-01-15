@@ -7,7 +7,7 @@ class TextListFormField extends StatefulWidget {
   final List<String>? initValue;
   final Function(List<String>)? onChanged;
   final String? labelText;
-  final Future<List<String>> Function()? fetchInitValue;
+  final Future<List<String>?> Function()? fetchInitValue;
 
   @override
   State<TextListFormField> createState() => _TextListFormFieldState();
@@ -26,9 +26,11 @@ class _TextListFormFieldState extends State<TextListFormField> {
     _textList = widget.initValue ?? [];
 
     if (widget.fetchInitValue != null) {
-      widget.fetchInitValue!().then((List<String> textList) => setState(() {
-        _textList = textList;
-        _setTextList(textList);
+      widget.fetchInitValue!().then((List<String>? textList) => setState(() {
+        if (textList != null) {
+          _textList = textList;
+          _setTextList(textList);
+        }
       }));
     }
 

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:fitsense/services/fall_detection_service.dart';
+import 'package:fitsense/widgets/fall_detected_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:esense_flutter/esense.dart';
 
@@ -12,6 +13,7 @@ class ESenseConnection extends StatefulWidget {
 
 class _ESenseConnectionState extends State<ESenseConnection> {
   final String _eSenseName = "myEarables";
+  bool _openDialog = false;
 
   @override
   void initState() {
@@ -25,15 +27,21 @@ class _ESenseConnectionState extends State<ESenseConnection> {
     print("hasSuccessfulConneted: $hasSuccessfulConneted");
   }
 
-  void _beep() async {
-    await AudioPlayer().play(AssetSource("beep-06.wav"), volume: 1);
+  void _setupFallDetection() {
+    ESenseFallDetection fallDetection =
+        ESenseFallDetection([_handleFallDetected]);
+    print("Fall detection is running..");
   }
 
-  void _setupFallDetection() {
-    ESenseFallDetection fallDetection = ESenseFallDetection([
-      () => _beep()
-    ]);
-    print("Fall detection is running..");
+  void _handleFallDetected() {
+    if (!_openDialog) {
+      _openDialog = true;
+      showDialog(
+        context: context,
+        builder: (_) => FallDetectedDialog(),
+        barrierDismissible: false,
+      ).then((_) => _openDialog = false);
+    }
   }
 
   @override
@@ -95,18 +103,16 @@ class ReconnectButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(child: child),
-            ),
-            ElevatedButton(
-              onPressed: onPressed,
-              child: const Text("eSense verbinden"),
-            ),
-          ]),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(child: child),
+        ),
+        ElevatedButton(
+          onPressed: onPressed,
+          child: const Text("eSense verbinden"),
+        ),
+      ]),
     );
   }
 }
